@@ -5,9 +5,9 @@ let $       = cheerio.load(`<a class="embed-placeholder" data-placement="replace
 let najax   = require('najax');
 $.ajax      = najax;
 
-let PortableHole = require('./portable-hole/portable-hole')({$: $});
+let PortableHoles = require('./lib/portable-holes')({$: $});
 
-let hole = new PortableHole({
+let hole = new PortableHoles({
   Embedly: {
     query: { key : '0cb3651dde4740db8fcb147850c6b555' }
   }

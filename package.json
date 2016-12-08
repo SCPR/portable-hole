@@ -1,5 +1,5 @@
 {
-  "name": "portable-hole",
+  "name": "portable-holes",
   "version": "1.0.0",
   "description": "Embedding made easy.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SCPR/portable-hole.git"
+    "url": "git+https://github.com/SCPR/portable-holes.git"
   },
   "keywords": [
     "embed"
@@ -16,9 +16,9 @@
   "author": "Bryan Ricker & Ben Titcomb",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SCPR/portable-hole/issues"
+    "url": "https://github.com/SCPR/portable-holes/issues"
   },
-  "homepage": "https://github.com/SCPR/portable-hole#readme",
+  "homepage": "https://github.com/SCPR/portable-holes#readme",
   "dependencies": {
     "cheerio": "^0.22.0",
     "glob": "^7.1.1",
