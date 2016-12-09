@@ -25,7 +25,7 @@ echo "<a href='http://projects.scpr.org/firetracker/oembed?url=http://projects.s
 
 If you want to keep the process active while passing in multiple pieces of HTML, you should include `\x04`(EOT character) as a delimiter between your HTML documents.  Normally, a newline character is used to delimit standard input, but it's likely that our HTML will contain newlines and it's a bit hazardous to strip them out.  Better to use a character that's highly-unlikely to be in your HTML.
 
-Portable Holes works in Node.js.  Because it was originally built for the browser in Rails apps, it expects a jQuery-like root object.  This may change in the future.  For Node.js use, I recommend using [Cheerio](https://github.com/cheeriojs/cheerio) which is a stripped-down version of jQuery for parsing documents.
+Portable Holes works in Node.js.  Because it was originally built for the browser in Rails apps, it expects a jQuery-like root object.  This may change in the future.  For Node.js use, I recommend using [Cheerio](https://github.com/cheeriojs/cheerio) which is a stripped-down version of jQuery for parsing documents, and [Najax](https://github.com/najaxjs/najax) to shim `jQuery.ajax()`.
 
 Configuration can be stored both in `~/.portable-holes.yml` or `./.portable-holes.yml`(the current directory).  The individual settings from the configuration in the current directory takes precedence over those in the user's home folder.
 
@@ -35,7 +35,8 @@ Configuration can be stored both in `~/.portable-holes.yml` or `./.portable-hole
 const PortableHoles = require('portable-holes');
 const cheerio       = require('cheerio');
 
-let $ = cheerio.load("<somemarkup></somemarkup>");
+let $  = cheerio.load("<somemarkup></somemarkup>");
+$.ajax = require('najax');
 
 let holes = new PortableHoles({$: $});
 
