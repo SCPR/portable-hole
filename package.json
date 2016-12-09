@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Embedding made easy.",
   "main": "index.js",
+  "bin" : {
+    "portable-holes": "./bin/portable-holes"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "gulp browser-compile",
+    "debug-compile": "node debug $(which gulp) --gulpfile ./gulpfile.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +27,20 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "glob": "^7.1.1",
+    "gulp": "^3.9.1",
     "handlebars": "^4.0.6",
+    "js-yaml": "^3.7.0",
     "najax": "^0.7.1",
+    "stringify": "^5.1.0",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "aliasify": "^2.1.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0",
+    "brfs": "^1.4.3",
+    "browserify": "^13.1.1",
+    "gulp": "^3.9.1",
+    "vinyl-source-stream": "^1.1.0"
   }
 }

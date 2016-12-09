@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="../dist/portable-holes.js"></script>
+  </head>
+  <body>
+    <a href="http://projects.scpr.org/firetracker/oembed?url=http://projects.scpr.org/firetracker/rim-fire/" data-maxheight="450" class="embed-placeholder" data-service="firetracker">Rim Fire</a>
+    <script>
+      PortableHoles = require('portable-holes');
+      var hole = new PortableHoles({$: $});
+      hole.swap();
+    </script>
+  </body>
+</html>
