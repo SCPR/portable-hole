@@ -24,8 +24,9 @@ gulp.task('browser-compile', () => {
 
   // We have to make a fake glob module because it depends on some
   // fs functions we can't easily shoehorn.
+
   let globs = {
-    "/lib/adapters/*.js": glob.sync("./lib/adapters/*.js"),
+    "/lib/adapters/*.js": glob.sync("./lib/adapters/*.js").map((p) => {return p.replace(/^\./, '')}),
     "/lib/templates/*.hbs": glob.sync("./lib/templates/*.hbs")
   }
   let falseGlob = `module.exports = {sync: function(pathName){return ${JSON.stringify(globs)}[pathName];}}`;
@@ -33,8 +34,8 @@ gulp.task('browser-compile', () => {
 
   // Here, we explicitly include the adapters and templates
   // because we call them dynamically in the script.   
-  glob.sync("./lib/adapters/*.js").forEach((file) => {
-    b = b.require(file, {expose: `.${file}`});
+  glob.sync(`./lib/adapters/*.js`).forEach((file) => {
+    b = b.require(file, {expose: file});
   });
 
   let files = {}

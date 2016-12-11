@@ -1,954 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"../lib/adapters/brightcove.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-var Brightcove = function (_StaticTemplate) {
-    _inherits(Brightcove, _StaticTemplate);
-
-    function Brightcove() {
-        _classCallCheck(this, Brightcove);
-
-        return _possibleConstructorReturn(this, (Brightcove.__proto__ || Object.getPrototypeOf(Brightcove)).apply(this, arguments));
-    }
-
-    _createClass(Brightcove, [{
-        key: 'swap',
-        value: function swap() {
-            var match = this._parseUrl();
-            if (!match) {
-                return false;
-            }
-
-            var playerId = match[1];
-            var playerKey = match[2];
-
-            var result = this.embed(Brightcove.Template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                playerId: playerId,
-                playerKey: playerKey
-            }));
-            _get(Brightcove.prototype.__proto__ || Object.getPrototypeOf(Brightcove.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Brightcove";
-
-            this.Template = loadTemplate('brightcove');
-
-            this.QueryDefaults = {
-                maxwidth: 620,
-                maxheight: 550
-            };
-
-            this.Matchers = [new RegExp(/bcpid(\d+)\?bckey=([^&]+)/i)];
-        }
-    }]);
-
-    return Brightcove;
-}(StaticTemplate);
-
-;
-Brightcove.initClass();
-module.exports = Brightcove;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/coveritlive.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-var CoverItLive = function (_StaticTemplate) {
-    _inherits(CoverItLive, _StaticTemplate);
-
-    function CoverItLive() {
-        _classCallCheck(this, CoverItLive);
-
-        return _possibleConstructorReturn(this, (CoverItLive.__proto__ || Object.getPrototypeOf(CoverItLive)).apply(this, arguments));
-    }
-
-    _createClass(CoverItLive, [{
-        key: 'swap',
-        value: function swap() {
-            // If the href doesn't match our known URL schemes
-            // for this adapter, then let's not bother trying.
-            var match = this._parseUrl();
-            if (!match) {
-                return false;
-            }
-
-            var eventId = match[1];
-
-            var result = this.embed(CoverItLive.Template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                eventId: eventId
-            }));
-            _get(CoverItLive.prototype.__proto__ || Object.getPrototypeOf(CoverItLive.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "CoverItLive";
-
-            this.Template = loadTemplate('cover_it_live');
-
-            this.QueryDefaults = {
-                maxwidth: 620,
-                maxheight: 550
-            };
-
-            this.Matchers = [new RegExp(/\/altcast_code=([^\/]+)\//i)];
-        }
-    }]);
-
-    return CoverItLive;
-}(StaticTemplate);
-
-;
-CoverItLive.initClass();
-module.exports = CoverItLive;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/documentcloud.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Oembed = require('./oembed');
-
-var DocumentCloud = function (_Oembed) {
-    _inherits(DocumentCloud, _Oembed);
-
-    function DocumentCloud() {
-        _classCallCheck(this, DocumentCloud);
-
-        return _possibleConstructorReturn(this, (DocumentCloud.__proto__ || Object.getPrototypeOf(DocumentCloud)).apply(this, arguments));
-    }
-
-    _createClass(DocumentCloud, null, [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "DocumentCloud";
-            this.Endpoint = "http://www.documentcloud.org/api/oembed.json";
-
-            this.QueryDefaults = {
-                maxheight: 700,
-                responsive: true
-            };
-        }
-    }]);
-
-    return DocumentCloud;
-}(Oembed);
-
-;
-DocumentCloud.initClass();
-module.exports = DocumentCloud;
-
-},{"./oembed":"../lib/adapters/oembed.js"}],"../lib/adapters/embedly.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Oembed = require('./oembed');
-
-var Embedly = function (_Oembed) {
-    _inherits(Embedly, _Oembed);
-
-    function Embedly() {
-        _classCallCheck(this, Embedly);
-
-        return _possibleConstructorReturn(this, (Embedly.__proto__ || Object.getPrototypeOf(Embedly)).apply(this, arguments));
-    }
-
-    _createClass(Embedly, null, [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Embedly";
-
-            this.Endpoint = "http://api.embed.ly/1/oembed";
-
-            // This object should hold any keys that we want to
-            // send to the API. Any key not in this object will
-            // be ignored as a data attribute.
-            this.QueryDefaults = {
-                maxheight: null,
-                maxwidth: 650 // Without this, height is just at the maximum.
-            };
-        }
-    }]);
-
-    return Embedly;
-}(Oembed);
-
-;
-Embedly.initClass();
-module.exports = Embedly;
-
-},{"./oembed":"../lib/adapters/oembed.js"}],"../lib/adapters/firetracker.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Oembed = require('./oembed');
-
-var FireTracker = function (_Oembed) {
-    _inherits(FireTracker, _Oembed);
-
-    function FireTracker() {
-        _classCallCheck(this, FireTracker);
-
-        return _possibleConstructorReturn(this, (FireTracker.__proto__ || Object.getPrototypeOf(FireTracker)).apply(this, arguments));
-    }
-
-    _createClass(FireTracker, null, [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "FireTracker";
-
-            this.Endpoint = "http://firetracker.scpr.org/oembed";
-
-            this.QueryDefaults = {
-                maxwidth: 510,
-                maxheight: 374,
-                format: 'json'
-            };
-        }
-    }]);
-
-    return FireTracker;
-}(Oembed);
-
-;
-FireTracker.initClass();
-module.exports = FireTracker;
-
-},{"./oembed":"../lib/adapters/oembed.js"}],"../lib/adapters/googlefusion.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-var GoogleFusion = function (_StaticTemplate) {
-    _inherits(GoogleFusion, _StaticTemplate);
-
-    function GoogleFusion() {
-        _classCallCheck(this, GoogleFusion);
-
-        return _possibleConstructorReturn(this, (GoogleFusion.__proto__ || Object.getPrototypeOf(GoogleFusion)).apply(this, arguments));
-    }
-
-    _createClass(GoogleFusion, [{
-        key: 'swap',
-        value: function swap() {
-            var result = this.embed(GoogleFusion.Template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                url: this.href
-            }));
-            _get(GoogleFusion.prototype.__proto__ || Object.getPrototypeOf(GoogleFusion.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "GoogleFusion";
-
-            this.Template = loadTemplate('google_fusion');
-
-            this.QueryDefaults = {
-                maxwidth: 620,
-                maxheight: 550
-            };
-
-            this.Matchers = [];
-        }
-    }]);
-
-    return GoogleFusion;
-}(StaticTemplate);
-
-;
-GoogleFusion.initClass();
-module.exports = GoogleFusion;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/instagram.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-// Instagram's oembed endpoint returns "photo" oembed types (instead of "rich"),
-// and only a URL to the photo, not an actual embed code. Therefore, we need to
-// use StaticTemplate to use the iframe embed code.
-
-var Instagram = function (_StaticTemplate) {
-    _inherits(Instagram, _StaticTemplate);
-
-    function Instagram() {
-        _classCallCheck(this, Instagram);
-
-        return _possibleConstructorReturn(this, (Instagram.__proto__ || Object.getPrototypeOf(Instagram)).apply(this, arguments));
-    }
-
-    _createClass(Instagram, [{
-        key: 'swap',
-        value: function swap() {
-            var match = this._parseUrl();
-            if (!match) {
-                return false;
-            }
-
-            var photoId = match[1];
-
-            var result = this.embed(Instagram.Template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                photoId: photoId
-            }));
-            _get(Instagram.prototype.__proto__ || Object.getPrototypeOf(Instagram.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Instagram";
-
-            this.Template = loadTemplate('instagram');
-
-            this.QueryDefaults = {
-                maxwidth: 612,
-                maxheight: 710
-            };
-
-            this.Matchers = [
-            // http://instagram.com/p/e8hJe6CvTW/
-            new RegExp(/instagram\.com\/p\/([^\/]+)/i)];
-        }
-    }]);
-
-    return Instagram;
-}(StaticTemplate);
-
-;
-Instagram.initClass();
-module.exports = Instagram;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/oembed.js":[function(require,module,exports){
-// Oembed adapters MUST define:
-// * @Endpoint      - The URL to the oembed endpoint
-//
-// Oembed adapters SHOULD defined:
-// * @QueryDefaults - The fallback query parameters if no others are specified.
-
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _ = require('underscore')._;
-var Adapter = require('../adapter');
-
-var Oembed = function (_Adapter) {
-    _inherits(Oembed, _Adapter);
-
-    function Oembed() {
-        _classCallCheck(this, Oembed);
-
-        return _possibleConstructorReturn(this, (Oembed.__proto__ || Object.getPrototypeOf(Oembed)).apply(this, arguments));
-    }
-
-    _createClass(Oembed, [{
-        key: 'swap',
-        value: function swap() {
-            var _this2 = this;
-
-            return this.$.ajax({
-                url: this.adapter.Endpoint,
-                type: 'GET',
-                dataType: 'json',
-                data: _.extend(this.queryParams, { url: this.href }),
-
-                success: function success(data, textStatus, jqXHR) {
-                    var result = _this2.embedData(data);
-                    _get(Oembed.prototype.__proto__ || Object.getPrototypeOf(Oembed.prototype), 'swap', _this2).call(_this2);
-                    return result;
-                },
-
-                error: function error(jqXHR, textStatus, errorThrown) {
-                    _get(Oembed.prototype.__proto__ || Object.getPrototypeOf(Oembed.prototype), 'swap', _this2).call(_this2);
-                    // return console.log('[portable-hole oembed] error.', jqXHR);
-                }
-            });
-        }
-
-        // Embed differently based on the oEmbed response we got.
-        //
-        // If we have data.html, then use it.
-        // If not, then that could mean one of a few things:
-        // * It's a `photo` type, which we handle by just wrapping an <img> tag
-        //   around the URL.
-        // * It's a `link` type, which we can just leave alone because the
-        //   embed placeholder is already there.
-        // * It's an invalid oEmbed response, which we should also just leave alone
-        //   and let the link serve its purpose.
-
-    }, {
-        key: 'embedData',
-        value: function embedData(data) {
-            if (data.html) {
-                return this.embed(data.html);
-            }
-            if (data.type === 'photo') {
-                return this._embedPhoto(data);
-            }
-        }
-
-        // Embed a photo.
-        // Pass in an object containing:
-        // * URL to the image
-        // * width of the image
-        // * height of hte image
-
-    }, {
-        key: '_embedPhoto',
-        value: function _embedPhoto(data) {
-            var img = $('<img />', {
-                src: data.url,
-                width: data.width,
-                height: data.height
-            });
-
-            return this.embed(img);
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Oembed";
-
-            // @Override
-            //
-            // The Oembed endpoint for the adapter.
-            // Example: http://projects.scpr.org/firetracker/oembed
-            this.Endpoint = null;
-        }
-    }]);
-
-    return Oembed;
-}(Adapter);
-
-;
-Oembed.initClass();
-module.exports = Oembed;
-
-},{"../adapter":1,"underscore":51}],"../lib/adapters/polldaddy.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var StaticTemplate = require('./statictemplate');
-var loadTemplate = require('../template-loader');
-
-var Polldaddy = function (_StaticTemplate) {
-    _inherits(Polldaddy, _StaticTemplate);
-
-    function Polldaddy() {
-        _classCallCheck(this, Polldaddy);
-
-        return _possibleConstructorReturn(this, (Polldaddy.__proto__ || Object.getPrototypeOf(Polldaddy)).apply(this, arguments));
-    }
-
-    _createClass(Polldaddy, [{
-        key: 'swap',
-        value: function swap() {
-            var _this2 = this;
-
-            var match = this._parseUrl();
-            if (!match) {
-                return false;
-            }
-
-            var domain = match[1];
-            var type = match[2];
-            var id = match[3];
-
-            var template = this._findTemplate(type);
-
-            var oldDocumentWrite = document.write;
-            document.write = function (html) {
-                return _this2.wrapper.append(html);
-            };
-
-            this.embed(template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                domain: domain,
-                id: id
-            }));
-
-            _get(Polldaddy.prototype.__proto__ || Object.getPrototypeOf(Polldaddy.prototype), 'swap', this).call(this);
-
-            return setTimeout(function () {
-                return document.write = oldDocumentWrite;
-            }, 500);
-        }
-    }, {
-        key: '_findTemplate',
-        value: function _findTemplate(type) {
-            var template = function () {
-                switch (type) {
-                    case 's':
-                        return 'polldaddy_survey';
-                    case 'poll':case 'p':
-                        return 'polldaddy_poll';
-                }
-            }();
-
-            return Polldaddy.templates[template];
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Polldaddy";
-
-            // We have to figure out the template dynamically.
-            this.Template = null;
-
-            this.templates = {
-                polldaddy_survey: loadTemplate('polldaddy_survey'),
-                polldaddy_poll: loadTemplate('polldaddy_poll')
-            };
-
-            this.QueryDefaults = {
-                maxwidth: 620,
-                maxheight: 550,
-                format: 'json'
-            };
-
-            this.Matchers = [new RegExp(/https?:\/\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?/i)];
-        }
-    }]);
-
-    return Polldaddy;
-}(StaticTemplate);
-
-;
-Polldaddy.initClass();
-module.exports = Polldaddy;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/ranker.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Oembed = require('./oembed');
-
-var Ranker = function (_Oembed) {
-    _inherits(Ranker, _Oembed);
-
-    function Ranker() {
-        _classCallCheck(this, Ranker);
-
-        return _possibleConstructorReturn(this, (Ranker.__proto__ || Object.getPrototypeOf(Ranker)).apply(this, arguments));
-    }
-
-    _createClass(Ranker, [{
-        key: 'swap',
-        value: function swap() {
-            var _this2 = this;
-
-            var matcher = /\/(\d+)/;
-            var id = matcher.exec(this.href)[1];
-
-            return this.$.ajax({
-                url: this.adapter.Endpoint + '/' + id,
-                type: 'GET',
-                dataType: 'json',
-                data: _.extend(this.queryParams),
-
-                success: function success(data, textStatus, jqXHR) {
-                    _this2.embedData(data);
-                    _get(Ranker.prototype.__proto__ || Object.getPrototypeOf(Ranker.prototype), 'swap', _this2).call(_this2);
-                },
-
-                error: function error(jqXHR, textStatus, errorThrown) {
-                    // return console.log('[portable-hole oembed] error.', jqXHR);
-                    _get(Ranker.prototype.__proto__ || Object.getPrototypeOf(Ranker.prototype), 'swap', _this2).call(_this2);
-                }
-            });
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Ranker";
-            this.Endpoint = "http://widget.ranker.com/oembed";
-        }
-    }]);
-
-    return Ranker;
-}(Oembed);
-
-;
-Ranker.initClass();
-module.exports = Ranker;
-
-},{"./oembed":"../lib/adapters/oembed.js"}],"../lib/adapters/rebelmouse.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-var RebelMouse = function (_StaticTemplate) {
-    _inherits(RebelMouse, _StaticTemplate);
-
-    function RebelMouse() {
-        _classCallCheck(this, RebelMouse);
-
-        return _possibleConstructorReturn(this, (RebelMouse.__proto__ || Object.getPrototypeOf(RebelMouse)).apply(this, arguments));
-    }
-
-    _createClass(RebelMouse, [{
-        key: 'swap',
-        value: function swap() {
-            var match = this._parseUrl();
-            if (!match) {
-                return false;
-            }
-
-            var site = encodeURIComponent(match[1]);
-
-            var result = this.embed(RebelMouse.Template({
-                maxheight: this.queryParams.maxheight,
-                maxwidth: this.queryParams.maxwidth,
-                site: site
-            }));
-            _get(RebelMouse.prototype.__proto__ || Object.getPrototypeOf(RebelMouse.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "RebelMouse";
-
-            this.Template = loadTemplate('rebel_mouse');
-
-            this.QueryDefaults = {
-                maxwidth: 620,
-                maxheight: 1000
-            };
-
-            this.Matchers = [new RegExp(/rebelmouse\.com\/(.+?)\/?$/i)];
-        }
-    }]);
-
-    return RebelMouse;
-}(StaticTemplate);
-
-;
-RebelMouse.initClass();
-module.exports = RebelMouse;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/statictemplate.js":[function(require,module,exports){
-// StaticTemplate is for when you just want to hard-code the embed code
-// into the /templates directory. This is either to avoid an expensive
-// call to an oEmbed endpoint, or if there simply isn't another way to
-// programatically retrieve the embed code.
-//
-// Your StaticTemplate adapter SHOULD define:
-// * @Template      - The name of the template to use (in the templates
-//                    directory)
-// * @QueryDefaults - The default query paramters if no others are passed in.
-//
-// Your StaticTemplate adapter MAY define:
-// * @Matchers - An array of regular expressions which will be used to extract
-//               important information from the URL (such as an ID).
-//               If your adapter doesn't need a Matcher, then you don't have to
-//               define this property. This property is used by _parseUrl(),
-//               which doesn't get called automatically.
-//
-
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Adapter = require('../adapter');
-
-var StaticTemplate = function (_Adapter) {
-    _inherits(StaticTemplate, _Adapter);
-
-    function StaticTemplate() {
-        _classCallCheck(this, StaticTemplate);
-
-        return _possibleConstructorReturn(this, (StaticTemplate.__proto__ || Object.getPrototypeOf(StaticTemplate)).apply(this, arguments));
-    }
-
-    _createClass(StaticTemplate, [{
-        key: 'swap',
-        value: function swap() {
-            // Extract the info and render the template
-            _get(StaticTemplate.prototype.__proto__ || Object.getPrototypeOf(StaticTemplate.prototype), 'swap', this).call(this);
-        }
-    }, {
-        key: '_parseUrl',
-        value: function _parseUrl() {
-            var _this2 = this;
-
-            var match = null;
-
-            _.find(this.adapter.Matchers, function (m) {
-                return match = m.exec(_this2.href);
-            });
-
-            return match;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "StaticTemplate";
-
-            // The template to use.
-            this.Template = null;
-
-            // Query parameter defaults
-            this.QueryDefaults = {};
-
-            // The matchers to extract the info out of the URL.
-            this.Matchers = [];
-        }
-    }]);
-
-    return StaticTemplate;
-}(Adapter);
-
-;
-StaticTemplate.initClass();
-module.exports = StaticTemplate;
-
-},{"../adapter":1}],"../lib/adapters/storify.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-var Utility = require('../utility');
-
-var Storify = function (_StaticTemplate) {
-    _inherits(Storify, _StaticTemplate);
-
-    function Storify() {
-        _classCallCheck(this, Storify);
-
-        return _possibleConstructorReturn(this, (Storify.__proto__ || Object.getPrototypeOf(Storify)).apply(this, arguments));
-    }
-
-    _createClass(Storify, [{
-        key: 'swap',
-        value: function swap() {
-            // Storify's embed code doesn't provide a protocol (http/s), so let's
-            // strip it out. We also want to make sure that there is no trailing
-            // slash so that we can concatenate other things to the URL.
-            var url = Utility.stripProtocol(Utility.stripTrailingSlash(this.href));
-
-            // Storify embed is responsive, so we don't need to provide a width.
-            var result = this.embed(Storify.Template({
-                maxheight: this.queryParams.maxheight,
-                url: url
-            }));
-            _get(Storify.prototype.__proto__ || Object.getPrototypeOf(Storify.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Storify";
-
-            this.Template = loadTemplate('storify');
-
-            this.QueryDefaults = {
-                maxwidth: 550,
-                maxheight: 750
-            };
-
-            // For storify, we just use the full URL, so no matchers are needed.
-            this.Matchers = [];
-        }
-    }]);
-
-    return Storify;
-}(StaticTemplate);
-
-;
-Storify.initClass();
-module.exports = Storify;
-
-},{"../template-loader":4,"../utility":5,"./statictemplate":"../lib/adapters/statictemplate.js"}],"../lib/adapters/twitter.js":[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var loadTemplate = require('../template-loader');
-var StaticTemplate = require('./statictemplate');
-
-var Twitter = function (_StaticTemplate) {
-    _inherits(Twitter, _StaticTemplate);
-
-    function Twitter() {
-        _classCallCheck(this, Twitter);
-
-        return _possibleConstructorReturn(this, (Twitter.__proto__ || Object.getPrototypeOf(Twitter)).apply(this, arguments));
-    }
-
-    _createClass(Twitter, [{
-        key: 'swap',
-        value: function swap() {
-            var result = this.embed(Twitter.Template({ url: this.href }));
-            _get(Twitter.prototype.__proto__ || Object.getPrototypeOf(Twitter.prototype), 'swap', this).call(this);
-            return result;
-        }
-    }], [{
-        key: 'initClass',
-        value: function initClass() {
-            this.prototype.className = "Twitter";
-
-            this.Template = loadTemplate('twitter');
-
-            // Twitter doesn't give a damn about you or your dimensions.
-            this.QueryDefaults = {};
-
-            // For twitter, we just use the full URL, so no matchers are needed.
-            this.Matchers = [];
-        }
-    }]);
-
-    return Twitter;
-}(StaticTemplate);
-
-;
-Twitter.initClass();
-module.exports = Twitter;
-
-},{"../template-loader":4,"./statictemplate":"../lib/adapters/statictemplate.js"}],1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
 // Your Adapter SHOULD define:
@@ -11209,10 +10259,960 @@ module.exports = { readFileSync: function readFileSync(pathName) {
 "use strict";
 
 module.exports = { sync: function sync(pathName) {
-    return { "/lib/adapters/*.js": ["./lib/adapters/brightcove.js", "./lib/adapters/coveritlive.js", "./lib/adapters/documentcloud.js", "./lib/adapters/embedly.js", "./lib/adapters/firetracker.js", "./lib/adapters/googlefusion.js", "./lib/adapters/instagram.js", "./lib/adapters/oembed.js", "./lib/adapters/polldaddy.js", "./lib/adapters/ranker.js", "./lib/adapters/rebelmouse.js", "./lib/adapters/statictemplate.js", "./lib/adapters/storify.js", "./lib/adapters/twitter.js"], "/lib/templates/*.hbs": ["./lib/templates/brightcove.hbs", "./lib/templates/cover_it_live.hbs", "./lib/templates/google_fusion.hbs", "./lib/templates/instagram.hbs", "./lib/templates/polldaddy_poll.hbs", "./lib/templates/polldaddy_survey.hbs", "./lib/templates/rebel_mouse.hbs", "./lib/templates/storify.hbs", "./lib/templates/twitter.hbs"] }[pathName];
+    return { "/lib/adapters/*.js": ["/lib/adapters/brightcove.js", "/lib/adapters/coveritlive.js", "/lib/adapters/documentcloud.js", "/lib/adapters/embedly.js", "/lib/adapters/firetracker.js", "/lib/adapters/googlefusion.js", "/lib/adapters/instagram.js", "/lib/adapters/oembed.js", "/lib/adapters/polldaddy.js", "/lib/adapters/ranker.js", "/lib/adapters/rebelmouse.js", "/lib/adapters/statictemplate.js", "/lib/adapters/storify.js", "/lib/adapters/twitter.js"], "/lib/templates/*.hbs": ["./lib/templates/brightcove.hbs", "./lib/templates/cover_it_live.hbs", "./lib/templates/google_fusion.hbs", "./lib/templates/instagram.hbs", "./lib/templates/polldaddy_poll.hbs", "./lib/templates/polldaddy_survey.hbs", "./lib/templates/rebel_mouse.hbs", "./lib/templates/storify.hbs", "./lib/templates/twitter.hbs"] }[pathName];
   } };
 
-},{}],"portable-holes":[function(require,module,exports){
+},{}],"/lib/adapters/brightcove.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+var Brightcove = function (_StaticTemplate) {
+    _inherits(Brightcove, _StaticTemplate);
+
+    function Brightcove() {
+        _classCallCheck(this, Brightcove);
+
+        return _possibleConstructorReturn(this, (Brightcove.__proto__ || Object.getPrototypeOf(Brightcove)).apply(this, arguments));
+    }
+
+    _createClass(Brightcove, [{
+        key: 'swap',
+        value: function swap() {
+            var match = this._parseUrl();
+            if (!match) {
+                return false;
+            }
+
+            var playerId = match[1];
+            var playerKey = match[2];
+
+            var result = this.embed(Brightcove.Template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                playerId: playerId,
+                playerKey: playerKey
+            }));
+            _get(Brightcove.prototype.__proto__ || Object.getPrototypeOf(Brightcove.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Brightcove";
+
+            this.Template = loadTemplate('brightcove');
+
+            this.QueryDefaults = {
+                maxwidth: 620,
+                maxheight: 550
+            };
+
+            this.Matchers = [new RegExp(/bcpid(\d+)\?bckey=([^&]+)/i)];
+        }
+    }]);
+
+    return Brightcove;
+}(StaticTemplate);
+
+;
+Brightcove.initClass();
+module.exports = Brightcove;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/coveritlive.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+var CoverItLive = function (_StaticTemplate) {
+    _inherits(CoverItLive, _StaticTemplate);
+
+    function CoverItLive() {
+        _classCallCheck(this, CoverItLive);
+
+        return _possibleConstructorReturn(this, (CoverItLive.__proto__ || Object.getPrototypeOf(CoverItLive)).apply(this, arguments));
+    }
+
+    _createClass(CoverItLive, [{
+        key: 'swap',
+        value: function swap() {
+            // If the href doesn't match our known URL schemes
+            // for this adapter, then let's not bother trying.
+            var match = this._parseUrl();
+            if (!match) {
+                return false;
+            }
+
+            var eventId = match[1];
+
+            var result = this.embed(CoverItLive.Template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                eventId: eventId
+            }));
+            _get(CoverItLive.prototype.__proto__ || Object.getPrototypeOf(CoverItLive.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "CoverItLive";
+
+            this.Template = loadTemplate('cover_it_live');
+
+            this.QueryDefaults = {
+                maxwidth: 620,
+                maxheight: 550
+            };
+
+            this.Matchers = [new RegExp(/\/altcast_code=([^\/]+)\//i)];
+        }
+    }]);
+
+    return CoverItLive;
+}(StaticTemplate);
+
+;
+CoverItLive.initClass();
+module.exports = CoverItLive;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/documentcloud.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Oembed = require('./oembed');
+
+var DocumentCloud = function (_Oembed) {
+    _inherits(DocumentCloud, _Oembed);
+
+    function DocumentCloud() {
+        _classCallCheck(this, DocumentCloud);
+
+        return _possibleConstructorReturn(this, (DocumentCloud.__proto__ || Object.getPrototypeOf(DocumentCloud)).apply(this, arguments));
+    }
+
+    _createClass(DocumentCloud, null, [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "DocumentCloud";
+            this.Endpoint = "http://www.documentcloud.org/api/oembed.json";
+
+            this.QueryDefaults = {
+                maxheight: 700,
+                responsive: true
+            };
+        }
+    }]);
+
+    return DocumentCloud;
+}(Oembed);
+
+;
+DocumentCloud.initClass();
+module.exports = DocumentCloud;
+
+},{"./oembed":"/lib/adapters/oembed.js"}],"/lib/adapters/embedly.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Oembed = require('./oembed');
+
+var Embedly = function (_Oembed) {
+    _inherits(Embedly, _Oembed);
+
+    function Embedly() {
+        _classCallCheck(this, Embedly);
+
+        return _possibleConstructorReturn(this, (Embedly.__proto__ || Object.getPrototypeOf(Embedly)).apply(this, arguments));
+    }
+
+    _createClass(Embedly, null, [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Embedly";
+
+            this.Endpoint = "http://api.embed.ly/1/oembed";
+
+            // This object should hold any keys that we want to
+            // send to the API. Any key not in this object will
+            // be ignored as a data attribute.
+            this.QueryDefaults = {
+                maxheight: null,
+                maxwidth: 650 // Without this, height is just at the maximum.
+            };
+        }
+    }]);
+
+    return Embedly;
+}(Oembed);
+
+;
+Embedly.initClass();
+module.exports = Embedly;
+
+},{"./oembed":"/lib/adapters/oembed.js"}],"/lib/adapters/firetracker.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Oembed = require('./oembed');
+
+var FireTracker = function (_Oembed) {
+    _inherits(FireTracker, _Oembed);
+
+    function FireTracker() {
+        _classCallCheck(this, FireTracker);
+
+        return _possibleConstructorReturn(this, (FireTracker.__proto__ || Object.getPrototypeOf(FireTracker)).apply(this, arguments));
+    }
+
+    _createClass(FireTracker, null, [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "FireTracker";
+
+            this.Endpoint = "http://firetracker.scpr.org/oembed";
+
+            this.QueryDefaults = {
+                maxwidth: 510,
+                maxheight: 374,
+                format: 'json'
+            };
+        }
+    }]);
+
+    return FireTracker;
+}(Oembed);
+
+;
+FireTracker.initClass();
+module.exports = FireTracker;
+
+},{"./oembed":"/lib/adapters/oembed.js"}],"/lib/adapters/googlefusion.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+var GoogleFusion = function (_StaticTemplate) {
+    _inherits(GoogleFusion, _StaticTemplate);
+
+    function GoogleFusion() {
+        _classCallCheck(this, GoogleFusion);
+
+        return _possibleConstructorReturn(this, (GoogleFusion.__proto__ || Object.getPrototypeOf(GoogleFusion)).apply(this, arguments));
+    }
+
+    _createClass(GoogleFusion, [{
+        key: 'swap',
+        value: function swap() {
+            var result = this.embed(GoogleFusion.Template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                url: this.href
+            }));
+            _get(GoogleFusion.prototype.__proto__ || Object.getPrototypeOf(GoogleFusion.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "GoogleFusion";
+
+            this.Template = loadTemplate('google_fusion');
+
+            this.QueryDefaults = {
+                maxwidth: 620,
+                maxheight: 550
+            };
+
+            this.Matchers = [];
+        }
+    }]);
+
+    return GoogleFusion;
+}(StaticTemplate);
+
+;
+GoogleFusion.initClass();
+module.exports = GoogleFusion;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/instagram.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+// Instagram's oembed endpoint returns "photo" oembed types (instead of "rich"),
+// and only a URL to the photo, not an actual embed code. Therefore, we need to
+// use StaticTemplate to use the iframe embed code.
+
+var Instagram = function (_StaticTemplate) {
+    _inherits(Instagram, _StaticTemplate);
+
+    function Instagram() {
+        _classCallCheck(this, Instagram);
+
+        return _possibleConstructorReturn(this, (Instagram.__proto__ || Object.getPrototypeOf(Instagram)).apply(this, arguments));
+    }
+
+    _createClass(Instagram, [{
+        key: 'swap',
+        value: function swap() {
+            var match = this._parseUrl();
+            if (!match) {
+                return false;
+            }
+
+            var photoId = match[1];
+
+            var result = this.embed(Instagram.Template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                photoId: photoId
+            }));
+            _get(Instagram.prototype.__proto__ || Object.getPrototypeOf(Instagram.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Instagram";
+
+            this.Template = loadTemplate('instagram');
+
+            this.QueryDefaults = {
+                maxwidth: 612,
+                maxheight: 710
+            };
+
+            this.Matchers = [
+            // http://instagram.com/p/e8hJe6CvTW/
+            new RegExp(/instagram\.com\/p\/([^\/]+)/i)];
+        }
+    }]);
+
+    return Instagram;
+}(StaticTemplate);
+
+;
+Instagram.initClass();
+module.exports = Instagram;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/oembed.js":[function(require,module,exports){
+// Oembed adapters MUST define:
+// * @Endpoint      - The URL to the oembed endpoint
+//
+// Oembed adapters SHOULD defined:
+// * @QueryDefaults - The fallback query parameters if no others are specified.
+
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _ = require('underscore')._;
+var Adapter = require('../adapter');
+
+var Oembed = function (_Adapter) {
+    _inherits(Oembed, _Adapter);
+
+    function Oembed() {
+        _classCallCheck(this, Oembed);
+
+        return _possibleConstructorReturn(this, (Oembed.__proto__ || Object.getPrototypeOf(Oembed)).apply(this, arguments));
+    }
+
+    _createClass(Oembed, [{
+        key: 'swap',
+        value: function swap() {
+            var _this2 = this;
+
+            return this.$.ajax({
+                url: this.adapter.Endpoint,
+                type: 'GET',
+                dataType: 'json',
+                data: _.extend(this.queryParams, { url: this.href }),
+
+                success: function success(data, textStatus, jqXHR) {
+                    var result = _this2.embedData(data);
+                    _get(Oembed.prototype.__proto__ || Object.getPrototypeOf(Oembed.prototype), 'swap', _this2).call(_this2);
+                    return result;
+                },
+
+                error: function error(jqXHR, textStatus, errorThrown) {
+                    _get(Oembed.prototype.__proto__ || Object.getPrototypeOf(Oembed.prototype), 'swap', _this2).call(_this2);
+                    // return console.log('[portable-hole oembed] error.', jqXHR);
+                }
+            });
+        }
+
+        // Embed differently based on the oEmbed response we got.
+        //
+        // If we have data.html, then use it.
+        // If not, then that could mean one of a few things:
+        // * It's a `photo` type, which we handle by just wrapping an <img> tag
+        //   around the URL.
+        // * It's a `link` type, which we can just leave alone because the
+        //   embed placeholder is already there.
+        // * It's an invalid oEmbed response, which we should also just leave alone
+        //   and let the link serve its purpose.
+
+    }, {
+        key: 'embedData',
+        value: function embedData(data) {
+            if (data.html) {
+                return this.embed(data.html);
+            }
+            if (data.type === 'photo') {
+                return this._embedPhoto(data);
+            }
+        }
+
+        // Embed a photo.
+        // Pass in an object containing:
+        // * URL to the image
+        // * width of the image
+        // * height of hte image
+
+    }, {
+        key: '_embedPhoto',
+        value: function _embedPhoto(data) {
+            var img = $('<img />', {
+                src: data.url,
+                width: data.width,
+                height: data.height
+            });
+
+            return this.embed(img);
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Oembed";
+
+            // @Override
+            //
+            // The Oembed endpoint for the adapter.
+            // Example: http://projects.scpr.org/firetracker/oembed
+            this.Endpoint = null;
+        }
+    }]);
+
+    return Oembed;
+}(Adapter);
+
+;
+Oembed.initClass();
+module.exports = Oembed;
+
+},{"../adapter":1,"underscore":51}],"/lib/adapters/polldaddy.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StaticTemplate = require('./statictemplate');
+var loadTemplate = require('../template-loader');
+
+var Polldaddy = function (_StaticTemplate) {
+    _inherits(Polldaddy, _StaticTemplate);
+
+    function Polldaddy() {
+        _classCallCheck(this, Polldaddy);
+
+        return _possibleConstructorReturn(this, (Polldaddy.__proto__ || Object.getPrototypeOf(Polldaddy)).apply(this, arguments));
+    }
+
+    _createClass(Polldaddy, [{
+        key: 'swap',
+        value: function swap() {
+            var _this2 = this;
+
+            var match = this._parseUrl();
+            if (!match) {
+                return false;
+            }
+
+            var domain = match[1];
+            var type = match[2];
+            var id = match[3];
+
+            var template = this._findTemplate(type);
+
+            var oldDocumentWrite = document.write;
+            document.write = function (html) {
+                return _this2.wrapper.append(html);
+            };
+
+            this.embed(template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                domain: domain,
+                id: id
+            }));
+
+            _get(Polldaddy.prototype.__proto__ || Object.getPrototypeOf(Polldaddy.prototype), 'swap', this).call(this);
+
+            return setTimeout(function () {
+                return document.write = oldDocumentWrite;
+            }, 500);
+        }
+    }, {
+        key: '_findTemplate',
+        value: function _findTemplate(type) {
+            var template = function () {
+                switch (type) {
+                    case 's':
+                        return 'polldaddy_survey';
+                    case 'poll':case 'p':
+                        return 'polldaddy_poll';
+                }
+            }();
+
+            return Polldaddy.templates[template];
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Polldaddy";
+
+            // We have to figure out the template dynamically.
+            this.Template = null;
+
+            this.templates = {
+                polldaddy_survey: loadTemplate('polldaddy_survey'),
+                polldaddy_poll: loadTemplate('polldaddy_poll')
+            };
+
+            this.QueryDefaults = {
+                maxwidth: 620,
+                maxheight: 550,
+                format: 'json'
+            };
+
+            this.Matchers = [new RegExp(/https?:\/\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?/i)];
+        }
+    }]);
+
+    return Polldaddy;
+}(StaticTemplate);
+
+;
+Polldaddy.initClass();
+module.exports = Polldaddy;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/ranker.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Oembed = require('./oembed');
+
+var Ranker = function (_Oembed) {
+    _inherits(Ranker, _Oembed);
+
+    function Ranker() {
+        _classCallCheck(this, Ranker);
+
+        return _possibleConstructorReturn(this, (Ranker.__proto__ || Object.getPrototypeOf(Ranker)).apply(this, arguments));
+    }
+
+    _createClass(Ranker, [{
+        key: 'swap',
+        value: function swap() {
+            var _this2 = this;
+
+            var matcher = /\/(\d+)/;
+            var id = matcher.exec(this.href)[1];
+
+            return this.$.ajax({
+                url: this.adapter.Endpoint + '/' + id,
+                type: 'GET',
+                dataType: 'json',
+                data: _.extend(this.queryParams),
+
+                success: function success(data, textStatus, jqXHR) {
+                    _this2.embedData(data);
+                    _get(Ranker.prototype.__proto__ || Object.getPrototypeOf(Ranker.prototype), 'swap', _this2).call(_this2);
+                },
+
+                error: function error(jqXHR, textStatus, errorThrown) {
+                    // return console.log('[portable-hole oembed] error.', jqXHR);
+                    _get(Ranker.prototype.__proto__ || Object.getPrototypeOf(Ranker.prototype), 'swap', _this2).call(_this2);
+                }
+            });
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Ranker";
+            this.Endpoint = "http://widget.ranker.com/oembed";
+        }
+    }]);
+
+    return Ranker;
+}(Oembed);
+
+;
+Ranker.initClass();
+module.exports = Ranker;
+
+},{"./oembed":"/lib/adapters/oembed.js"}],"/lib/adapters/rebelmouse.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+var RebelMouse = function (_StaticTemplate) {
+    _inherits(RebelMouse, _StaticTemplate);
+
+    function RebelMouse() {
+        _classCallCheck(this, RebelMouse);
+
+        return _possibleConstructorReturn(this, (RebelMouse.__proto__ || Object.getPrototypeOf(RebelMouse)).apply(this, arguments));
+    }
+
+    _createClass(RebelMouse, [{
+        key: 'swap',
+        value: function swap() {
+            var match = this._parseUrl();
+            if (!match) {
+                return false;
+            }
+
+            var site = encodeURIComponent(match[1]);
+
+            var result = this.embed(RebelMouse.Template({
+                maxheight: this.queryParams.maxheight,
+                maxwidth: this.queryParams.maxwidth,
+                site: site
+            }));
+            _get(RebelMouse.prototype.__proto__ || Object.getPrototypeOf(RebelMouse.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "RebelMouse";
+
+            this.Template = loadTemplate('rebel_mouse');
+
+            this.QueryDefaults = {
+                maxwidth: 620,
+                maxheight: 1000
+            };
+
+            this.Matchers = [new RegExp(/rebelmouse\.com\/(.+?)\/?$/i)];
+        }
+    }]);
+
+    return RebelMouse;
+}(StaticTemplate);
+
+;
+RebelMouse.initClass();
+module.exports = RebelMouse;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/statictemplate.js":[function(require,module,exports){
+// StaticTemplate is for when you just want to hard-code the embed code
+// into the /templates directory. This is either to avoid an expensive
+// call to an oEmbed endpoint, or if there simply isn't another way to
+// programatically retrieve the embed code.
+//
+// Your StaticTemplate adapter SHOULD define:
+// * @Template      - The name of the template to use (in the templates
+//                    directory)
+// * @QueryDefaults - The default query paramters if no others are passed in.
+//
+// Your StaticTemplate adapter MAY define:
+// * @Matchers - An array of regular expressions which will be used to extract
+//               important information from the URL (such as an ID).
+//               If your adapter doesn't need a Matcher, then you don't have to
+//               define this property. This property is used by _parseUrl(),
+//               which doesn't get called automatically.
+//
+
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Adapter = require('../adapter');
+
+var StaticTemplate = function (_Adapter) {
+    _inherits(StaticTemplate, _Adapter);
+
+    function StaticTemplate() {
+        _classCallCheck(this, StaticTemplate);
+
+        return _possibleConstructorReturn(this, (StaticTemplate.__proto__ || Object.getPrototypeOf(StaticTemplate)).apply(this, arguments));
+    }
+
+    _createClass(StaticTemplate, [{
+        key: 'swap',
+        value: function swap() {
+            // Extract the info and render the template
+            _get(StaticTemplate.prototype.__proto__ || Object.getPrototypeOf(StaticTemplate.prototype), 'swap', this).call(this);
+        }
+    }, {
+        key: '_parseUrl',
+        value: function _parseUrl() {
+            var _this2 = this;
+
+            var match = null;
+
+            _.find(this.adapter.Matchers, function (m) {
+                return match = m.exec(_this2.href);
+            });
+
+            return match;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "StaticTemplate";
+
+            // The template to use.
+            this.Template = null;
+
+            // Query parameter defaults
+            this.QueryDefaults = {};
+
+            // The matchers to extract the info out of the URL.
+            this.Matchers = [];
+        }
+    }]);
+
+    return StaticTemplate;
+}(Adapter);
+
+;
+StaticTemplate.initClass();
+module.exports = StaticTemplate;
+
+},{"../adapter":1}],"/lib/adapters/storify.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+var Utility = require('../utility');
+
+var Storify = function (_StaticTemplate) {
+    _inherits(Storify, _StaticTemplate);
+
+    function Storify() {
+        _classCallCheck(this, Storify);
+
+        return _possibleConstructorReturn(this, (Storify.__proto__ || Object.getPrototypeOf(Storify)).apply(this, arguments));
+    }
+
+    _createClass(Storify, [{
+        key: 'swap',
+        value: function swap() {
+            // Storify's embed code doesn't provide a protocol (http/s), so let's
+            // strip it out. We also want to make sure that there is no trailing
+            // slash so that we can concatenate other things to the URL.
+            var url = Utility.stripProtocol(Utility.stripTrailingSlash(this.href));
+
+            // Storify embed is responsive, so we don't need to provide a width.
+            var result = this.embed(Storify.Template({
+                maxheight: this.queryParams.maxheight,
+                url: url
+            }));
+            _get(Storify.prototype.__proto__ || Object.getPrototypeOf(Storify.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Storify";
+
+            this.Template = loadTemplate('storify');
+
+            this.QueryDefaults = {
+                maxwidth: 550,
+                maxheight: 750
+            };
+
+            // For storify, we just use the full URL, so no matchers are needed.
+            this.Matchers = [];
+        }
+    }]);
+
+    return Storify;
+}(StaticTemplate);
+
+;
+Storify.initClass();
+module.exports = Storify;
+
+},{"../template-loader":4,"../utility":5,"./statictemplate":"/lib/adapters/statictemplate.js"}],"/lib/adapters/twitter.js":[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var loadTemplate = require('../template-loader');
+var StaticTemplate = require('./statictemplate');
+
+var Twitter = function (_StaticTemplate) {
+    _inherits(Twitter, _StaticTemplate);
+
+    function Twitter() {
+        _classCallCheck(this, Twitter);
+
+        return _possibleConstructorReturn(this, (Twitter.__proto__ || Object.getPrototypeOf(Twitter)).apply(this, arguments));
+    }
+
+    _createClass(Twitter, [{
+        key: 'swap',
+        value: function swap() {
+            var result = this.embed(Twitter.Template({ url: this.href }));
+            _get(Twitter.prototype.__proto__ || Object.getPrototypeOf(Twitter.prototype), 'swap', this).call(this);
+            return result;
+        }
+    }], [{
+        key: 'initClass',
+        value: function initClass() {
+            this.prototype.className = "Twitter";
+
+            this.Template = loadTemplate('twitter');
+
+            // Twitter doesn't give a damn about you or your dimensions.
+            this.QueryDefaults = {};
+
+            // For twitter, we just use the full URL, so no matchers are needed.
+            this.Matchers = [];
+        }
+    }]);
+
+    return Twitter;
+}(StaticTemplate);
+
+;
+Twitter.initClass();
+module.exports = Twitter;
+
+},{"../template-loader":4,"./statictemplate":"/lib/adapters/statictemplate.js"}],"portable-holes":[function(require,module,exports){
 (function (__dirname){
 'use strict';
 
@@ -11328,7 +11328,7 @@ PortableHoles.Base = function (_Eventable) {
 glob.sync(__dirname + '/adapters/*.js').forEach(function (file) {
     var adapterName = file.match(/\/([\w|\-]+)\.js/)[1];
     if (adapterName) {
-        PortableHoles.Adapters[adapterName] = require('.' + file);
+        PortableHoles.Adapters[adapterName] = require(file);
     }
 });
 
