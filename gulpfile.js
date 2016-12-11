@@ -25,22 +25,22 @@ gulp.task('browser-compile', () => {
   // We have to make a fake glob module because it depends on some
   // fs functions we can't easily shoehorn.
   let globs = {
-    "./lib/adapters/*.js": glob.sync("./lib/adapters/*.js"),
-    "./lib/templates/*.hbs": glob.sync("./lib/templates/*.hbs")
+    "/lib/adapters/*.js": glob.sync("./lib/adapters/*.js"),
+    "/lib/templates/*.hbs": glob.sync("./lib/templates/*.hbs")
   }
   let falseGlob = `module.exports = {sync: function(pathName){return ${JSON.stringify(globs)}[pathName];}}`;
   fs.writeFile('./tmp/false-glob.js', falseGlob);
 
   // Here, we explicitly include the adapters and templates
   // because we call them dynamically in the script.   
-  globs["./lib/adapters/*.js"].forEach((file) => {
+  glob.sync("./lib/adapters/*.js").forEach((file) => {
     b = b.require(file, {expose: `.${file}`});
   });
 
   let files = {}
   // Stringify and BRFS will take care of making these templates
   // available through the fs.readFileSync function.
-  globs["./lib/templates/*.hbs"].forEach((file) => {
+  glob.sync("./lib/templates/*.hbs").forEach((file) => {
     files[file] = fs.readFileSync(file, 'utf-8');
   });
   let falseFs = `module.exports = {readFileSync: function(pathName){return ${JSON.stringify(files)}[pathName];}}`;

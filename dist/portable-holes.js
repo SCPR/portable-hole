@@ -11209,10 +11209,11 @@ module.exports = { readFileSync: function readFileSync(pathName) {
 "use strict";
 
 module.exports = { sync: function sync(pathName) {
-    return { "./lib/adapters/*.js": ["./lib/adapters/brightcove.js", "./lib/adapters/coveritlive.js", "./lib/adapters/documentcloud.js", "./lib/adapters/embedly.js", "./lib/adapters/firetracker.js", "./lib/adapters/googlefusion.js", "./lib/adapters/instagram.js", "./lib/adapters/oembed.js", "./lib/adapters/polldaddy.js", "./lib/adapters/ranker.js", "./lib/adapters/rebelmouse.js", "./lib/adapters/statictemplate.js", "./lib/adapters/storify.js", "./lib/adapters/twitter.js"], "./lib/templates/*.hbs": ["./lib/templates/brightcove.hbs", "./lib/templates/cover_it_live.hbs", "./lib/templates/google_fusion.hbs", "./lib/templates/instagram.hbs", "./lib/templates/polldaddy_poll.hbs", "./lib/templates/polldaddy_survey.hbs", "./lib/templates/rebel_mouse.hbs", "./lib/templates/storify.hbs", "./lib/templates/twitter.hbs"] }[pathName];
+    return { "/lib/adapters/*.js": ["./lib/adapters/brightcove.js", "./lib/adapters/coveritlive.js", "./lib/adapters/documentcloud.js", "./lib/adapters/embedly.js", "./lib/adapters/firetracker.js", "./lib/adapters/googlefusion.js", "./lib/adapters/instagram.js", "./lib/adapters/oembed.js", "./lib/adapters/polldaddy.js", "./lib/adapters/ranker.js", "./lib/adapters/rebelmouse.js", "./lib/adapters/statictemplate.js", "./lib/adapters/storify.js", "./lib/adapters/twitter.js"], "/lib/templates/*.hbs": ["./lib/templates/brightcove.hbs", "./lib/templates/cover_it_live.hbs", "./lib/templates/google_fusion.hbs", "./lib/templates/instagram.hbs", "./lib/templates/polldaddy_poll.hbs", "./lib/templates/polldaddy_survey.hbs", "./lib/templates/rebel_mouse.hbs", "./lib/templates/storify.hbs", "./lib/templates/twitter.hbs"] }[pathName];
   } };
 
 },{}],"portable-holes":[function(require,module,exports){
+(function (__dirname){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -11324,7 +11325,7 @@ PortableHoles.Base = function (_Eventable) {
 }(Eventable);
 
 // Load the adapter classes
-glob.sync('./lib/adapters/*.js').forEach(function (file) {
+glob.sync(__dirname + '/adapters/*.js').forEach(function (file) {
     var adapterName = file.match(/\/([\w|\-]+)\.js/)[1];
     if (adapterName) {
         PortableHoles.Adapters[adapterName] = require('.' + file);
@@ -11333,4 +11334,5 @@ glob.sync('./lib/adapters/*.js').forEach(function (file) {
 
 module.exports = PortableHoles.Base;
 
+}).call(this,"/lib")
 },{"./../tmp/false-fs.js":52,"./../tmp/false-glob.js":53,"./defaults":2,"./eventable":3,"path":38,"underscore":51}]},{},[]);
