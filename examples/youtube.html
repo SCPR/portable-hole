@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="../dist/portable-holes.js"></script>
+  </head>
+  <body>
+    <a class="embed-placeholder" data-placement="replace" data-service="youtube" href="https://www.youtube.com/watch?v=lRjoDtwYF8s" title="https://www.youtube.com/watch?v=lRjoDtwYF8s">https://www.youtube.com/watch?v=lRjoDtwYF8s</a>
+    <script>
+      PortableHoles = require('portable-holes');
+      hole = new PortableHoles({
+        $: $,
+        Embedly: {
+          query: {
+            key: "0cb3651dde4740db8fcb147850c6b555"
+          }
+        }
+      });
+      hole.swap();
+    </script>
+  </body>
+</html>

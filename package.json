@@ -1,6 +1,6 @@
 {
   "name": "portable-holes",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Embedding made easy.",
   "main": "index.js",
   "bin" : {

@@ -22,8 +22,12 @@ gulp.task('browser-compile', () => {
 
   b.require('./lib/portable-holes.js', {expose: 'portable-holes'})
 
+  // CRAZY THINGS HAPPEN HERE
   // We have to make a fake glob module because it depends on some
   // fs functions we can't easily shoehorn.
+  //
+  // Changes need to happen to the paths for them to be supported both on the backend
+  // and in the browser.  Need to clean this up later if possible.
 
   let globs = {
     "/lib/adapters/*.js": glob.sync("./lib/adapters/*.js").map((p) => {return p.replace(/^\./, '')}),
@@ -39,13 +43,12 @@ gulp.task('browser-compile', () => {
   });
 
   let files = {}
-  // Stringify and BRFS will take care of making these templates
-  // available through the fs.readFileSync function.
   glob.sync("./lib/templates/*.hbs").forEach((file) => {
-    files[file] = fs.readFileSync(file, 'utf-8');
+    files[file.replace(/^\./, '')] = fs.readFileSync(file, 'utf-8');
   });
   let falseFs = `module.exports = {readFileSync: function(pathName){return ${JSON.stringify(files)}[pathName];}}`;
   fs.writeFile('./tmp/false-fs.js', falseFs);
+  // CRAZY THINGS STOP HERE
 
   b
     .transform("aliasify", {aliases: { glob: './tmp/false-glob.js', fs: './tmp/false-fs.js' }})
