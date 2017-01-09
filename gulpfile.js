@@ -49,7 +49,7 @@ gulp.task('browser-compile', () => {
   let falseFs = `module.exports = {readFileSync: function(pathName){return ${JSON.stringify(files)}[pathName];}}`;
   fs.writeFile('./tmp/false-fs.js', falseFs);
   // CRAZY THINGS STOP HERE
-
+  // HOPEFULLY YOU'LL NEVER HAVE TO TOUCH THIS
   b
     .transform("aliasify", {aliases: { glob: './tmp/false-glob.js', fs: './tmp/false-fs.js' }})
     .transform("babelify", {presets: ["es2015"]})

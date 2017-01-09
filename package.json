@@ -1,9 +1,9 @@
 {
   "name": "portable-holes",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Embedding made easy.",
   "main": "index.js",
-  "bin" : {
+  "bin": {
     "portable-holes": "./bin/portable-holes"
   },
   "scripts": {
@@ -32,7 +32,8 @@
     "js-yaml": "^3.7.0",
     "najax": "^0.7.1",
     "stringify": "^5.1.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "url-parse": "^1.1.7"
   },
   "devDependencies": {
     "aliasify": "^2.1.0",

@@ -223,7 +223,7 @@ example), and also reduces the time it takes for an embed to load.
 
 # CKEditor plugin
 
-An unofficial CKEditor plugin can be found [HERE](https://github.com/SCPR/SCPRv4/blob/master/vendor/assets/javascripts/ckeditor/plugins/embed-placeholder/plugin.js).
+An unofficial CKEditor plugin can be found [HERE](https://github.com/SCPR/SCPRv4/blob/master/public/static/ckeditor/plugins/embed-placeholder/plugin.js).
 Copy and paste it into your own repository.
 
 # Known Issues
