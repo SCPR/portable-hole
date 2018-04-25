@@ -1,14 +1,31 @@
 [![portable hole](https://i.imgur.com/RsUlrGE.jpg)](https://vimeo.com/21509708)
 
-Portable Holes is a set of client-side adapters for various embed codes. 
-It aims to keep your article bodies clean while still allowing you 
-to have rich embeds within them.  It is the successor to [Embeditor](https://github.com/SCPR/embeditor-rails).
+Portable Holes is a set of client-side adapters for various embed codes.
+It aims to keep your article bodies clean while still allowing you to have rich embeds within them.  It is the successor to [Embeditor](https://github.com/SCPR/embeditor-rails).
+
+The library is **~153 kB** minified and **~35 kB** gzipped.  It runs in both Node.js and the browser.
+
+# Prerequisites
+
+Portable Holes expects a [jQuery](https://jquery.com/) like interface.  This may change in the future but, for now, you will need to have jQuery/Zepto/Cheerio available as either `window.$` or `global.$`, or be passed in directly as an option key. 
 
 # Installation
-`npm install -g portable-holes`
+
+## Node.js
+```sh
+npm install -g portable-holes
+```
+
+**Browser:**
+You can use something that supports CommonJS requires like [Browserify](http://browserify.org/), [Webpack](https://webpack.js.org/), or [Rollup](https://rollupjs.org) (using a [CommonJS plugin](https://github.com/rollup/rollup-plugin-commonjs)).
+
+Alternatively, you can take `dist/portable-holes.js` and use a script tag.
+
+```html
+<script src="portable-holes.js"></script>
+```
 
 # Usage
-There are a few ways to use Portable Holes.
 
 ## Standalone Script
 You can use it as a script that you pass markup through **stdin**.
@@ -25,20 +42,22 @@ echo "<a href='http://projects.scpr.org/firetracker/oembed?url=http://projects.s
 
 If you want to keep the process active while passing in multiple pieces of HTML, you should include `\x04`(EOT character) as a delimiter between your HTML documents.  Normally, a newline character is used to delimit standard input, but it's likely that our HTML will contain newlines and it's a bit hazardous to strip them out.  Better to use a character that's highly-unlikely to be in your HTML.
 
+## Node.js
+
 Portable Holes works in Node.js.  Because it was originally built for the browser in Rails apps, it expects a jQuery-like root object.  This may change in the future.  For Node.js use, I recommend using [Cheerio](https://github.com/cheeriojs/cheerio) which is a stripped-down version of jQuery for parsing documents, and [Najax](https://github.com/najaxjs/najax) to shim `jQuery.ajax()`.
 
 Configuration can be stored both in `~/.portable-holes.yml` or `./.portable-holes.yml`(the current directory).  The individual settings from the configuration in the current directory takes precedence over those in the user's home folder.
 
-## Node.js
-
 ```javascript
-const PortableHoles = require('portable-holes');
-const cheerio       = require('cheerio');
+// node.js
+const PortableHoles = require('portable-holes'),
+      cheerio       = require('cheerio');
+      
+global.$ = cheerio.load('<somemarkup></somemarkup>');
 
-let $  = cheerio.load("<somemarkup></somemarkup>");
-$.ajax = require('najax');
+$.ajax   = require('najax');
 
-let holes = new PortableHoles({$: $});
+const holes = new PortableHoles();
 
 holes.swap();
 ```
@@ -47,21 +66,22 @@ holes.swap();
 It even works in the browser!  Just include `dist/portable-holes.js` in a script tag within your HTML page and in your JavaScript:
 
 ```javascript
+// browser
 var PortableHoles = require('portable-holes');
 
-var holes = new PortableHoles({$: $});
+var holes = new PortableHoles();
 
 holes.swap();
 ```
 
 Note that you must have jQuery initialized on your page for this to work.
 
-The PortableHoles class has an *complete* event that you can subscribe to.  This event gets fired when all the placeholders have been processed.  This is mostly useful in the standalone script, but it's possible that these events can come in handy in other ways.
+The PortableHoles class has an *complete* event that you can listen to.  This event gets fired when all the placeholders have been processed.  This is mostly useful in the standalone script, but it's possible that these events can come in handy in other ways.
 
 ```javascript
 holes.on('complete', function(){
   console.log('COMPLETE');
-})
+});
 ```
 
 There is also a *swap* event that gets fired whenever an individual placeholder has been swapped.
@@ -87,7 +107,7 @@ There are several adapters included with this engine:
 * **Twitter**
 * **Storify**
 * **Brightcove**
-* **Document Cloud** - Not yet supported.
+* **Document Cloud**
 * **Rebel Mouse**
 
 
@@ -182,6 +202,7 @@ new PortableHoles({
 
 There are also some PortableHoles options you can configure:
 
+* `$` - A specific jQuery-compatible API to use for DOM manipulation.
 * `defaultAdapter` - Adapter that gets used when the service isn't recognized.
   default: `Embedly`
 * `defaultServer` - Service that gets used when the `data-service` attribute is
@@ -235,3 +256,4 @@ Copy and paste it into your own repository.
 
 If you have an adapter that you think would be useful for many, please open
 up a pull request.
+

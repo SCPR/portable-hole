@@ -8,19 +8,22 @@ const gulp       = require('gulp'),
       fs         = require('fs'),
       path       = require('path'),
       glob       = require('glob'),
-      aliasify   = require('aliasify')
+      aliasify   = require('aliasify'),
+      uglify     = require('gulp-uglify'),
+      sourceMaps = require('gulp-sourcemaps'),
+      buffer     = require('vinyl-buffer');
 
-gulp.task('browser-compile', () => {
+gulp.task('compile', () => {
 
   // Create a tmp directory if it doesn't exist.
 
-  if (!fs.existsSync("./tmp")){
-      fs.mkdirSync("./tmp");
-  }
+  if(!fs.existsSync('./tmp')) fs.mkdirSync('./tmp');
 
-  let b = browserify()
+  let b = browserify({
+    standalone: 'PortableHoles'
+  });
 
-  b.require('./lib/portable-holes.js', {expose: 'portable-holes'})
+  b.require('./lib/portable-holes.js', {expose: 'portable-holes'});
 
   // CRAZY THINGS HAPPEN HERE
   // We have to make a fake glob module because it depends on some
@@ -29,33 +32,36 @@ gulp.task('browser-compile', () => {
   // Changes need to happen to the paths for them to be supported both on the backend
   // and in the browser.  Need to clean this up later if possible.
 
-  let globs = {
-    "/lib/adapters/*.js": glob.sync("./lib/adapters/*.js").map((p) => {return p.replace(/^\./, '')}),
-    "/lib/templates/*.hbs": glob.sync("./lib/templates/*.hbs")
-  }
-  let falseGlob = `module.exports = {sync: function(pathName){return ${JSON.stringify(globs)}[pathName];}}`;
-  fs.writeFile('./tmp/false-glob.js', falseGlob);
+  const globs = {
+    '/lib/adapters/*.js': glob.sync('./lib/adapters/*.js').map(p => p.replace(/^\./, '')),
+    '/lib/templates/*.hbs': glob.sync('./lib/templates/*.hbs')
+  };
+  const fakeGlob = `module.exports = {sync: function(pathName){return ${JSON.stringify(globs)}[pathName];}}`;
+  fs.writeFile('./tmp/fake-glob.js', fakeGlob);
 
   // Here, we explicitly include the adapters and templates
   // because we call them dynamically in the script.   
-  glob.sync(`./lib/adapters/*.js`).forEach((file) => {
-    b = b.require(file, {expose: file});
-  });
+  glob.sync(`./lib/adapters/*.js`).forEach(file => b = b.require(file, {expose: file}));
 
-  let files = {}
+  const files = {}
   glob.sync("./lib/templates/*.hbs").forEach((file) => {
     files[file.replace(/^\./, '')] = fs.readFileSync(file, 'utf-8');
   });
-  let falseFs = `module.exports = {readFileSync: function(pathName){return ${JSON.stringify(files)}[pathName];}}`;
-  fs.writeFile('./tmp/false-fs.js', falseFs);
+  const fakeFs = `module.exports = {readFileSync: function(pathName){return ${JSON.stringify(files)}[pathName];}}`;
+  fs.writeFile('./tmp/fake-fs.js', fakeFs);
   // CRAZY THINGS STOP HERE
 
   b
-    .transform("aliasify", {aliases: { glob: './tmp/false-glob.js', fs: './tmp/false-fs.js' }})
-    .transform("babelify", {presets: ["es2015"]})
+    .transform('aliasify', {aliases: { glob: './tmp/fake-glob.js', fs: './tmp/fake-fs.js' }})
+    .transform('babelify', {presets: ['es2015']})
     .bundle()
     .pipe(source('portable-holes.js'))
-    .pipe(gulp.dest("./dist/"));
+    .pipe(buffer())
+    .pipe(sourceMaps.init({loadMaps: true}))
+    .pipe(uglify({mangle: false}))
+    .pipe(sourceMaps.write('./'))
+    .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('default', ['browser-compile']);
+gulp.task('default', ['compile']);
+

@@ -1,0 +1,13 @@
+{{#if isPost}}
+  <div id="fb-root"></div>
+  <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+  <div class="fb-post" data-href="https://www.facebook.com/{{username}}/posts/{{id}}" data-width="{{maxwidth}}">
+    <div class="fb-xfbml-parse-ignore">
+      <a href="https://www.facebook.com/{{username}}/posts/{{id}}">https://www.facebook.com/{{username}}/posts/{{id}}</a>
+    </div>
+  </div>
+{{/if}}
+{{#if isVideo}}
+  <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{{username}}%2Fvideos%2F{{id}}%2F&show_text=0&width={{maxwidth}}&height={{maxheight}}" width="100%" height="100%" style="border:none;overflow:hidden;max-width:{{maxwidth}}px;max-height:{{maxheight}}px;" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
+{{/if}}
+

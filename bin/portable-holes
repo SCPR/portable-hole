@@ -3,69 +3,57 @@
 // Provide markup with embed placeholders through STDIN
 // and rendered HTML will be returned through STDOUT.
 //
-// Written in standard ES5 to be supportive of older node.
 
 'use strict';
 
 process.stdin.setEncoding('utf8')
 
-const cheerio       = require('cheerio');
-const najax         = require('najax');
-const PortableHoles = require('../lib/portable-holes');
-const YAML          = require('js-yaml');
-const fs            = require('fs');
-
-let safeOpenConfig = (location) => {
-  let output;
-  try {
-    output = YAML.safeLoad(fs.readFileSync(location, 'utf8'));
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      output = {};
-    } else {
-      throw err;
-    }  
-  }
-  return output;
-}
-
-let config          = {};
-let userConfig      = safeOpenConfig('~/.portable-holes.yml');
-let instanceConfig  = safeOpenConfig(`${process.cwd()}/.portable-holes.yml`);
-
-Object.assign(config, userConfig, instanceConfig);
-
-let processHTML = (html, oncomplete) => {
-  let $     = cheerio.load(html);
-  $.ajax    = najax;
-  config.$  = $;
-  let holes = new PortableHoles(config);
-  holes.on('complete', () => { oncomplete($); });
-  holes.swap();
-}
+const cheerio        = require('cheerio'),
+      najax          = require('najax'),
+      PortableHoles  = require('../dist/portable-holes'),
+    { safeLoad }     = require('js-yaml'),
+    { readFileSync } = require('fs'),
+      userConfig     = safeOpenConfig('~/.portable-holes.yml'),
+      instanceConfig = safeOpenConfig(`${process.cwd()}/.portable-holes.yml`),
+      config         = Object.assign({}, userConfig, instanceConfig);
 
 let lock = false;
 
-let checker = (data) => {
-  if(!lock){
-    lock = true; // prevent incoming STDIN events from triggering DOM changes 
-    // while we are working on this particular chunk of data
-    //
-    // it's possible we don't need to do this anymore, as it's a holdover from
-    // when we were doing this with Embeditor, but it can't really hurt to have
-    // this locking mechanism in place.
-    processHTML(data, (body) => {
-      // Write our rendered HTML to STDOUT
-      process.stdin.pause()
-      process.stdout.write(body.html() + "\x04") // \x04 is our chunk delimiter
-      process.stderr.write("\x04")
-      process.stdin.resume()
-      lock = false;
-    })
-  } else {
-    //if locked, we will try again the next chance we get
-    setTimeout((() => {checker(data)})(data), 0)
+function safeOpenConfig(location) {
+  try {
+    return safeLoad(readFileSync(location, 'utf8'));
+  } catch (err) {
+    if (err.code === 'ENOENT') return {};
+    throw err;
   }
 }
 
+function processHTML(html, oncomplete) {
+  global.$  = cheerio.load(html);
+  $.ajax    = najax;
+  const holes = new PortableHoles(config);
+  holes.on('complete', () => oncomplete($));
+  holes.swap();
+}
+
+function checker(data) {
+  //if locked, we will try again the next chance we get
+  if(lock) return setTimeout((() => checker(data))(data), 0);
+  lock = true; // prevent incoming STDIN events from triggering DOM changes 
+  // while we are working on this particular chunk of data
+  //
+  // it's possible we don't need to do this anymore, as it's a holdover from
+  // when we were doing this with Embeditor, but it can't really hurt to have
+  // this locking mechanism in place.
+  processHTML(data, (body) => {
+    // Write our rendered HTML to STDOUT
+    process.stdin.pause()
+    process.stdout.write(body.html() + "\x04") // \x04 is our chunk delimiter
+    process.stderr.write("\x04")
+    process.stdin.resume()
+    lock = false;
+  });
+}
+
 process.stdin.on('data', checker);
+
