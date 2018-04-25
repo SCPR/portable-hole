@@ -58,7 +58,7 @@ gulp.task('compile', () => {
     .pipe(source('portable-holes.js'))
     .pipe(buffer())
     .pipe(sourceMaps.init({loadMaps: true}))
-    .pipe(uglify({mangle: false}))
+    .pipe(uglify({mangle: true}))
     .pipe(sourceMaps.write('./'))
     .pipe(gulp.dest('./dist/'));
 });

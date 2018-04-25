@@ -8,7 +8,7 @@
 
 process.stdin.setEncoding('utf8')
 
-const cheerio        = require('cheerio'),
+var   cheerio        = require('cheerio'),
       najax          = require('najax'),
       PortableHoles  = require('../dist/portable-holes'),
     { safeLoad }     = require('js-yaml'),
@@ -17,7 +17,7 @@ const cheerio        = require('cheerio'),
       instanceConfig = safeOpenConfig(`${process.cwd()}/.portable-holes.yml`),
       config         = Object.assign({}, userConfig, instanceConfig);
 
-let lock = false;
+var lock = false;
 
 function safeOpenConfig(location) {
   try {
@@ -31,7 +31,7 @@ function safeOpenConfig(location) {
 function processHTML(html, oncomplete) {
   global.$  = cheerio.load(html);
   $.ajax    = najax;
-  const holes = new PortableHoles(config);
+  var holes = new PortableHoles(config);
   holes.on('complete', () => oncomplete($));
   holes.swap();
 }

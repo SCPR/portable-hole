@@ -31,6 +31,7 @@ Alternatively, you can take `dist/portable-holes.js` and use a script tag.
 You can use it as a script that you pass markup through **stdin**.
 
 ```sh
+npm install -g portable-holes
 echo "<somemarkup>" | portable-holes
 ```
 
