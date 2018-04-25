@@ -1,6 +1,6 @@
 {
   "name": "portable-holes",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Embedding made easy.",
   "main": "./dist/portable-holes.js",
   "bin": {
